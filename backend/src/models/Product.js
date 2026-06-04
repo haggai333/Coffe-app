@@ -8,9 +8,11 @@ const productSchema = new mongoose.Schema({
   category:    { type: String, required: true, default: 'Coffee' },
   roast:       { type: String },
   stock:       { type: Number, required: true, default: 10 },
+  sold:        { type: Number, default: 0 },
   rating:      { type: Number, default: 4.5 },
   reviews:     { type: Number, default: 0 },
   image:       { type: String, required: true },
+  sellerId:    { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
 }, { timestamps: true })
 
 export const Product = mongoose.model('Product', productSchema)

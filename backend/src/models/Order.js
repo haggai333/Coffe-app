@@ -10,6 +10,7 @@ const orderItemSchema = new mongoose.Schema({
 
 const orderSchema = new mongoose.Schema({
   orderNumber: { type: String, unique: true },
+  userId:      { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   customer: {
     name:    { type: String, required: true },
     email:   { type: String, required: true },
@@ -24,19 +25,14 @@ const orderSchema = new mongoose.Schema({
   },
 }, { timestamps: true })
 
-// Auto-generate order number before saving
 orderSchema.pre('save', function (next) {
-  if (!this.orderNumber) {
-    this.orderNumber = `ORD-${Date.now()}`
-  }
+  if (!this.orderNumber) this.orderNumber = `ORD-${Date.now()}`
   next()
 })
 
-// Virtual for formatted date
 orderSchema.virtual('date').get(function () {
   return this.createdAt?.toLocaleString()
 })
-
 orderSchema.set('toJSON', { virtuals: true })
 
 export const Order = mongoose.model('Order', orderSchema)

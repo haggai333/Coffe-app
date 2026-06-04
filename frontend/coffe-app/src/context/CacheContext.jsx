@@ -14,22 +14,16 @@ export function CacheProvider({ children }) {
   useEffect(() => {
     const savedSearches = localStorage.getItem(SEARCH_HISTORY_KEY)
     if (savedSearches) {
-      try {
-        setRecentSearches(JSON.parse(savedSearches))
-      } catch (e) {}
+      try { setRecentSearches(JSON.parse(savedSearches)) } catch (e) {}
     }
-    
     const savedFilter = sessionStorage.getItem('filter_cache')
     if (savedFilter) {
-      try {
-        setFilterCache(JSON.parse(savedFilter))
-      } catch (e) {}
+      try { setFilterCache(JSON.parse(savedFilter)) } catch (e) {}
     }
   }, [])
 
   const addRecentSearch = (query) => {
     if (!query.trim()) return
-    
     setRecentSearches(prev => {
       const filtered = prev.filter(s => s !== query)
       const newHistory = [query, ...filtered].slice(0, 3)
@@ -47,7 +41,6 @@ export function CacheProvider({ children }) {
   const getCachedProducts = () => {
     const cached = localStorage.getItem(PRODUCTS_CACHE_KEY)
     const timestamp = localStorage.getItem(CACHE_TIMESTAMP_KEY)
-    
     if (cached && timestamp) {
       const now = Date.now()
       if (now - parseInt(timestamp) < CACHE_DURATION) {
@@ -60,6 +53,12 @@ export function CacheProvider({ children }) {
   const setCachedProducts = (products) => {
     localStorage.setItem(PRODUCTS_CACHE_KEY, JSON.stringify(products))
     localStorage.setItem(CACHE_TIMESTAMP_KEY, Date.now().toString())
+  }
+
+  // Call this whenever products change (add/edit/delete)
+  const clearProductCache = () => {
+    localStorage.removeItem(PRODUCTS_CACHE_KEY)
+    localStorage.removeItem(CACHE_TIMESTAMP_KEY)
   }
 
   const isCacheValid = () => {
@@ -76,7 +75,8 @@ export function CacheProvider({ children }) {
       updateFilterCache,
       getCachedProducts,
       setCachedProducts,
-      isCacheValid
+      clearProductCache,
+      isCacheValid,
     }}>
       {children}
     </CacheContext.Provider>
@@ -85,8 +85,6 @@ export function CacheProvider({ children }) {
 
 export function useCache() {
   const context = useContext(CacheContext)
-  if (!context) {
-    throw new Error('useCache must be used within a CacheProvider')
-  }
+  if (!context) throw new Error('useCache must be used within a CacheProvider')
   return context
 }

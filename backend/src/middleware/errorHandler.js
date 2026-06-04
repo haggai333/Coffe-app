@@ -1,6 +1,6 @@
 // Global error handler — catches any unhandled errors from routes
 export function errorHandler(err, req, res, next) {
-  console.error('💥 Server Error:', err.message)
+  console.error(' Server Error:', err.message)
   res.status(500).json({
     error: 'Internal server error',
     // Only show details in development
