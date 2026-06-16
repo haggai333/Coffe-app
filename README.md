@@ -27,6 +27,3 @@ npm install
 npm run dev
 ```
 
-## Author
-
-Haggai Alehegn — [github.com/haggai333](https://github.com/haggai333) | [LinkedIn](https://www.linkedin.com/in/haggai-alehegn/)
